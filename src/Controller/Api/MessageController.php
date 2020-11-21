@@ -22,9 +22,22 @@ class MessageController
     public function list() {
         $messages = $this->messageTable->findAll();
 
+        $printedMessages = [];
+
+        foreach ($messages as $k => $message) {
+            $printedMessages[] = [
+                'id' => $message['id'],
+                'body' => $message['body'],
+                'from_user_id' => $message['from_user_id'],
+                'to_user_id' => $message['to_user_id'],
+                'created_at' => $message['created_at'],
+                'edited_at' => $message['edited_at'],
+            ];
+        }
+
         return [
             'title' => 'Welcome To ChatApp',
-            'body' => json_encode(['messages' => json_encode($messages)]),
+            'body' => json_encode(['messages' => $printedMessages]),
             'content_type' => 'application/json',
         ];
     }

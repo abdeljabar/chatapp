@@ -10,7 +10,7 @@
     <main>
         <?=$body?>
     </main>
-    <footer>
+    <footer class="text-center">
         &copy; ChatApp <?=date('Y')?>
     </footer>
 
@@ -19,6 +19,8 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script>
+        const $container = $('#message_list');
+
         $('#message_send').submit(function (e) {
             e.preventDefault();
 
@@ -44,6 +46,32 @@
 
             }).catch(function (error) {
                 console.log('error', error.response);
+            });
+        });
+
+        $(document).ready(function () {
+            var messageContent = '';
+            axios
+                .get('/api/messages', {
+            })
+        .then( function (response) {
+            let messages = response.data.messages;
+
+            for (let i = 0; i < messages.length; i++) {
+                console.log(messages[i].id);
+                messageContent += $container.attr('data-prototype')
+                    .replace(/__id__/g, messages[i].id)
+                    .replace(/__body__/g, messages[i].body)
+                    .replace(/__from_user_id__/g, messages[i].from_user_id)
+                    .replace(/__to_user_id__/g, messages[i].to_user_id)
+                    .replace(/__time__/g, messages[i].created_at)
+                ;
+            }
+
+            console.log(messageContent);
+
+            $container.html(messageContent);
+
             });
         });
     </script>

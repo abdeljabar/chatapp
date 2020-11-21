@@ -8,19 +8,26 @@
 ?>
     <div class="container">
         <div class="row">
-            <div class="col">
+            <div class="col text-center">
                 <p>Welcome To ChatApp where you\'ll meet cool people like you.</p>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-3">
-                Contacts
+                <h3>Contacts</h3>
             </div>
             <div class="col-sm-9">
                 <h3>Messages</h3>
-                <form action="?" method="post" id="message_send">
-                    <textarea name="message[body]" id="message_body" cols="50" rows="2"></textarea>
-                    <button type="submit" class="btn btn-outline-success">send</button>
+                <div id="message_list" data-prototype="<?php ob_start(); include '_partials/message_item.php'; echo htmlentities(ob_get_clean()); ?>"></div>
+                <form action="?" method="post" id="message_send" class="mt-3">
+                    <div class="row">
+                        <div class="col-10">
+                            <textarea name="message[body]" id="message_body" rows="2" style="width: 100%"></textarea>
+                        </div>
+                        <div class="col-2 mt-2">
+                            <button type="submit" class="btn btn-outline-success">send</button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
