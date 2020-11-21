@@ -1,0 +1,51 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * Author: Abdeljabar Taoufikallah
+ * Date: 11/21/20
+ * Time: 9:01 PM
+ */
+
+$routes = [];
+
+$routes['/'] = [
+    'action' => 'index',
+    'controllerName' => 'home',
+    'class_path' => '\App\Controller\HomeController',
+    'file_path' => '/../src/Controller/HomeController.php',
+];
+
+$routes['/register'] = [
+    'action' => 'register',
+    'controllerName' => 'security',
+    'class_path' => '\App\Controller\SecurityController',
+    'file_path' => '/../src/Controller/SecurityController.php',
+];
+
+$routes['/login'] = [
+    'action' => 'login',
+    'controllerName' => 'security',
+    'class_path' => '\App\Controller\SecurityController',
+    'file_path' => '/../src/Controller/SecurityController.php',
+];
+
+$routes['/messages/archive'] = [
+    'action' => 'archive',
+    'controllerName' => 'message',
+    'class_path' => '\App\Controller\MessageController',
+    'file_path' => '/../src/Controller/MessageController.php',
+];
+
+$routes['/messages/list'] = [
+    'action' => 'archive',
+    'controllerName' => 'message',
+    'class_path' => '\App\Controller\MessageController',
+    'file_path' => '/../src/Controller/MessageController.php',
+];
+
+$routes['/api'] = [
+    'action' => 'index',
+    'controllerName' => 'home',
+    'class_path' => '\App\Controller\Api\HomeController',
+    'file_path' => '/../src/Controller/Api/HomeController.php',
+];
