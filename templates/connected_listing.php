@@ -3,7 +3,5 @@
  * Created by PhpStorm.
  * Author: Abdeljabar Taoufikallah
  * Date: 11/21/20
- * Time: 1:56 PM
+ * Time: 4:09 PM
  */
-
-include('../templates/index.php');
