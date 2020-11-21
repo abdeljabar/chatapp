@@ -25,6 +25,9 @@ class ContactController
         $printedContacts = [];
 
         foreach ($contacts as $k => $contact) {
+
+            $status = ((new \DateTime())->diff(new \DateTime($contact['last_signed_at'])))->i > 2 ? 'offline':'online';
+
             $printedContacts[] = [
                 'id' => $contact['id'],
                 'first_name' => $contact['first_name'],
@@ -32,7 +35,7 @@ class ContactController
                 'last_signed_at' => $contact['last_signed_at'],
                 'created_at' => $contact['created_at'],
                 'updated_at' => $contact['updated_at'],
-                'status' => 'online',
+                'status' => $status,
             ];
         }
 
