@@ -6,8 +6,17 @@
  * Time: 2:03 PM
  */
 
-try {
-    $pdo = new Pdo('mysql:host=localhost;dbname=chatapp', 'root', 'password!');
-} catch (PDOException $exception) {
-    die('Unable to connect to the DB Server: ' . $exception->getMessage());
+class DbConnection {
+    /**
+     * @return Pdo
+     */
+    public static function getPdo(): Pdo
+    {
+        try {
+            $pdo = new Pdo('mysql:host=localhost;dbname=chatapp', 'root', 'password!');
+        } catch (PDOException $exception) {
+            die('Unable to connect to the DB Server: ' . $exception->getMessage());
+        }
+        return $pdo;
+    }
 }

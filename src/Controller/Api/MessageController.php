@@ -8,14 +8,32 @@
 
 namespace App\Controller\Api;
 
+require_once __DIR__ . '/../../../TheFramework/PDO/DbTable.php';
 
 class MessageController
 {
-    public function listAll() {
-        return 'list';
+    private $messageTable;
+
+    public function __construct()
+    {
+        $this->messageTable = new \TheFramework\PDO\DbTable( 'message', 'id');
     }
 
-    public function send($message, $from, $to) {
-        return 'send message';
+    public function list() {
+        $messages = $this->messageTable->findAll();
+
+        return [
+            'title' => 'Welcome To ChatApp',
+            'body' => json_encode(['messages' => json_encode($messages)]),
+            'content_type' => 'application/json',
+        ];
+    }
+
+    public function send() {
+        return [
+            'title' => 'Welcome To ChatApp',
+            'body' => json_encode(['body' => 'Welcome to the beginning of your life.']),
+            'content_type' => 'application/json',
+        ];
     }
 }

@@ -12,7 +12,6 @@ namespace App\Controller;
 class HomeController
 {
     public function index() {
-
         ob_start();
         include  __DIR__ . '/../../templates/index.php';
         $body = ob_get_clean();

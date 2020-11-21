@@ -49,3 +49,10 @@ $routes['/api'] = [
     'class_path' => '\App\Controller\Api\HomeController',
     'file_path' => '/../src/Controller/Api/HomeController.php',
 ];
+
+$routes['/api/messages'] = [
+    'action' => 'list',
+    'controllerName' => 'message',
+    'class_path' => '\App\Controller\Api\MessageController',
+    'file_path' => '/../src/Controller/Api/MessageController.php',
+];
