@@ -30,14 +30,16 @@ class MessageController
     }
 
     public function send() {
-        $message = $_GET['message'];
+        $_POST = json_decode(file_get_contents('php://input'), true);
+
+        $message = $_POST['message'];
         $message['created_at'] = new \DateTime();
 
         $this->messageTable->save($message);
 
         return [
             'title' => 'Welcome To ChatApp',
-            'body' => json_encode(['body' => 'Welcome to the beginning of your life.']),
+            'body' => json_encode(['success' => 1, 'message_text' => $message['body']]),
             'content_type' => 'application/json',
         ];
     }

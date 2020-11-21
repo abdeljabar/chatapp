@@ -17,7 +17,11 @@
                 Contacts
             </div>
             <div class="col-sm-9">
-                Messages
+                <h3>Messages</h3>
+                <form action="?" method="post" id="message_send">
+                    <textarea name="message[body]" id="message_body" cols="50" rows="2"></textarea>
+                    <button type="submit" class="btn btn-outline-success">send</button>
+                </form>
             </div>
         </div>
     </div>
