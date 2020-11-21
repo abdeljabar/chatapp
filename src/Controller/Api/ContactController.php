@@ -20,11 +20,25 @@ class ContactController
     }
 
     public function list() {
-        $users = $this->userTable->findAll();
+        $contacts = $this->userTable->findAll();
+
+        $printedContacts = [];
+
+        foreach ($contacts as $k => $contact) {
+            $printedContacts[] = [
+                'id' => $contact['id'],
+                'first_name' => $contact['first_name'],
+                'last_name' => $contact['last_name'],
+                'last_signed_at' => $contact['last_signed_at'],
+                'created_at' => $contact['created_at'],
+                'updated_at' => $contact['updated_at'],
+                'status' => 'online',
+            ];
+        }
 
         return [
             'title' => 'Welcome To ChatApp',
-            'body' => json_encode(['users' => json_encode($users)]),
+            'body' => json_encode(['contacts' => $printedContacts]),
             'content_type' => 'application/json',
         ];
     }

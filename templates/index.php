@@ -15,6 +15,7 @@
         <div class="row">
             <div class="col-sm-3">
                 <h3>Contacts</h3>
+                <div id="contact_list" data-prototype="<?php ob_start(); include '_partials/contact_item.php'; echo htmlentities(ob_get_clean()); ?>"></div>
             </div>
             <div class="col-sm-9">
                 <h3>Messages</h3>
