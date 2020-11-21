@@ -10,32 +10,64 @@ namespace TheFramework\PDO;
 
 class DbTable
 {
-    private function query($pdo, $sql, $params=[]) {
-        $query = $pdo->prepare($sql);
+    private $pdo;
+    private $table;
+    private $primaryKey;
+    
+    public function __construct(\PDO $pdo, string $table, string $primaryKey)
+    {
+        $this->pdo = $pdo;
+        $this->table = $table;
+        $this->primaryKey = $primaryKey;
+    }
+
+    private function query($sql, $params=[]) {
+        $query = $this->pdo->prepare($sql);
         $query->execute($params);
 
         return $query;
     }
 
-    public function total($pdo, $table) {
-        $query = $this->query($pdo, 'SELECT COUNT(*) FROM `' . $table . '`');
-        $row = $query->fetch();
-        return $row[0];
+    public function findAll() {
+        $result = $this->query('SELECT * FROM `' . $this->table . '`');
+        return $result->fetchAll();
     }
 
-    public function findById($pdo, $table, $primaryKey, $value) {
-        $query = 'SELECT * FROM `' . $table . '` WHERE ' . $primaryKey . '` = :value';
+    public function findById($value) {
+        $query = 'SELECT * FROM `' . $this->table . '` WHERE ' . $this->primaryKey . '` = :value';
         $params = [
             'value' => $value
         ];
 
-        $query = $this->query($pdo, $query, $params);
+        $query = $this->query($query, $params);
 
         return $query->fetch();
     }
 
-    private function insert($pdo, $table, $fields) {
-        $query = 'INSERT INTO `' . $table . '` (';
+    public function total() {
+        $query = $this->query($this->pdo, 'SELECT COUNT(*) FROM `' . $this->table . '`');
+        $row = $query->fetch();
+        return $row[0];
+    }
+
+    public function save($record) {
+        try {
+            if ($record[$this->primaryKey] == '') {
+                $record[$this->primaryKey] = null;
+            }
+            $this->insert($this->table, $record);
+        } catch (\PDOException $exception) {
+            $this->update($this->table, $this->primaryKey, $record);
+        }
+    }
+
+    public function delete($id) {
+        $params = [':id' => $id];
+        $this->query('DELETE FROM ' . $this->table . ' WHERE `' . $this->primaryKey . '` = :id', $params);
+    }
+
+    private function insert($fields) {
+        $query = 'INSERT INTO `' . $this->table . '` (';
 
         foreach ($fields as $k => $v) {
             $query .= '`' . $k . '`,';
@@ -55,11 +87,11 @@ class DbTable
 
         $fields = $this->fixDates($fields);
 
-        $this->query($pdo, $query, $fields);
+        $this->query($query, $fields);
     }
 
-    private function update($pdo, $table, $primaryKey, $fields) {
-        $query = 'UPDATE  `' . $table . '` SET ';
+    private function update($fields) {
+        $query = 'UPDATE  `' . $this->table . '` SET ';
 
         foreach ($fields as $k => $v) {
             $query .= '`' . $k . '` = ' . $v . ',';
@@ -67,34 +99,13 @@ class DbTable
 
         $query = rtrim($query, ',');
 
-        $query .= ' WHERE `' . $primaryKey . '` = :primaryKey';
+        $query .= ' WHERE `' . $this->primaryKey . '` = :primaryKey';
 
         $fields['primaryKey'] = $fields['id'];
 
         $fields = $this->fixDates($fields);
 
-        $this->query($pdo, $query, $fields);
-    }
-
-    public function save($pdo, $table, $primaryKey, $record) {
-        try {
-            if ($record[$primaryKey] == '') {
-                $record[$primaryKey] = null;
-            }
-            $this->insert($pdo, $table, $record);
-        } catch (\PDOException $exception) {
-            $this->update($pdo, $table, $primaryKey, $record);
-        }
-    }
-
-    public function delete($pdo, $table, $primaryKey, $id) {
-        $params = [':id' => $id];
-        $this->query($pdo, 'DELETE FROM ' . $table . ' WHERE `' . $primaryKey . '` = :id', $params);
-    }
-
-    public function findAll($pdo, $table) {
-        $result = $this->query($pdo, 'SELECT * FROM `' . $table . '`');
-        return $result->fetchAll();
+        $this->query($query, $fields);
     }
 
     private function fixDates($fields) {
