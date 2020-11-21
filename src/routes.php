@@ -50,8 +50,22 @@ $routes['/api'] = [
     'file_path' => '/../src/Controller/Api/HomeController.php',
 ];
 
+$routes['/api/contacts'] = [
+    'action' => 'list',
+    'controllerName' => 'contact',
+    'class_path' => '\App\Controller\Api\ContactController',
+    'file_path' => '/../src/Controller/Api/ContactController.php',
+];
+
 $routes['/api/messages'] = [
     'action' => 'list',
+    'controllerName' => 'message',
+    'class_path' => '\App\Controller\Api\MessageController',
+    'file_path' => '/../src/Controller/Api/MessageController.php',
+];
+
+$routes['/api/messages/send'] = [
+    'action' => 'send',
     'controllerName' => 'message',
     'class_path' => '\App\Controller\Api\MessageController',
     'file_path' => '/../src/Controller/Api/MessageController.php',

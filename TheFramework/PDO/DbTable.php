@@ -54,13 +54,17 @@ class DbTable
 
     public function save($record) {
         try {
-            if ($record[$this->primaryKey] == '') {
+            if (!array_key_exists($this->primaryKey, $record) || $record[$this->primaryKey] == '') {
                 $record[$this->primaryKey] = null;
             }
-            $this->insert($this->table, $record);
+
+            $this->insert($record);
+
         } catch (\PDOException $exception) {
-            $this->update($this->table, $this->primaryKey, $record);
+            $this->update($record);
         }
+
+        return false;
     }
 
     public function delete($id) {
@@ -113,7 +117,7 @@ class DbTable
     private function fixDates($fields) {
         foreach ($fields as $k => $v) {
             if ($v instanceof  \DateTime) {
-                $fields[$k] = $v->format('Y-m-d');
+                $fields[$k] = $v->format('Y-m-d H:i');
             }
         }
 
