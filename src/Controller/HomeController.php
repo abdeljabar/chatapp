@@ -17,6 +17,10 @@ class HomeController
 
         $currentUser = $_SESSION['id'] ?? null;
 
+        if (null === $currentUser) {
+            header('location: /login');
+        }
+
         return [
             'title' => 'Welcome To ChatApp',
             'body' => $body,
