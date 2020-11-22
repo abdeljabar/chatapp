@@ -70,3 +70,10 @@ $routes['/api/messages/checknew'] = [
     'class_path' => '\App\Controller\Api\MessageController',
     'file_path' => '/../src/Controller/Api/MessageController.php',
 ];
+
+$routes['/install'] = [
+    'action' => 'install',
+    'controllerName' => 'installer',
+    'class_path' => '\App\Controller\InstallerController',
+    'file_path' => '/../src/Controller/InstallerController.php',
+];

@@ -8,8 +8,17 @@
 
 namespace App\Controller;
 
+require_once __DIR__ . '/../../TheFramework/PDO/DbTable.php';
+
 class HomeController
 {
+    private $messageTable;
+
+    public function __construct()
+    {
+        $this->messageTable = new \TheFramework\PDO\DbTable( 'message', 'id');
+    }
+
     public function index() {
         ob_start();
         include  __DIR__ . '/../../templates/index.php';
