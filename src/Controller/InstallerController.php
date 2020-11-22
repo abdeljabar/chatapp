@@ -17,6 +17,14 @@ class InstallerController
         $password = $_POST['password'];
         $dbname = $_POST['dbname'];
 
+        $newConfigFile = '<?php
+define(\'SERVER\', \''.$servername.'\');
+define(\'DBUSER\', \''.$username.'\');
+define(\'DBPASSWORD\', \''.$password.'\');
+define(\'DBNAME\', \''.$dbname.'\');
+';
+        file_put_contents(__DIR__ . '/../../config/db_config.php', $newConfigFile);
+
         try {
             $conn = new \PDO("mysql:host=$servername", $username, $password);
             $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
