@@ -16,9 +16,12 @@ class HomeController
         include  __DIR__ . '/../../templates/index.php';
         $body = ob_get_clean();
 
+        $currentUser = 1;
+
         return [
             'title' => 'Welcome To ChatApp',
             'body' => $body,
+            'currentUser' => $currentUser,
         ];
     }
 }

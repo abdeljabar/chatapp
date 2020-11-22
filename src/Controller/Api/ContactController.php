@@ -20,8 +20,8 @@ class ContactController
     }
 
     public function list() {
-        $contacts = $this->userTable->findAll();
-
+        $currentUser = json_decode($_GET['currentUser'], true);
+        $contacts = $this->userTable->findContacts($currentUser);
         $printedContacts = [];
 
         foreach ($contacts as $k => $contact) {

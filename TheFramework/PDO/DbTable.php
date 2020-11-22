@@ -65,6 +65,13 @@ class DbTable
         return $result->fetchAll();
     }
 
+    public function findContacts($current) {
+        $query = 'SELECT * FROM `user` WHERE id != :currentUser';
+        $result = $this->query($query, ['currentUser' => $current]);
+
+        return $result->fetchAll();
+    }
+
     public function findById($value) {
         $query = 'SELECT * FROM `' . $this->table . '` WHERE ' . $this->primaryKey . '` = :value';
         $params = [
@@ -88,13 +95,13 @@ class DbTable
                 $record[$this->primaryKey] = null;
             }
 
-            $this->insert($record);
+            $id = $this->insert($record);
 
         } catch (\PDOException $exception) {
-            $this->update($record);
+            $id = $this->update($record);
         }
 
-        return false;
+        return $id;
     }
 
     public function delete($id) {
@@ -124,6 +131,8 @@ class DbTable
         $fields = $this->fixDates($fields);
 
         $this->query($query, $fields);
+
+        return $this->pdo->lastInsertId();
     }
 
     private function update($fields) {
@@ -142,6 +151,8 @@ class DbTable
         $fields = $this->fixDates($fields);
 
         $this->query($query, $fields);
+
+        return $this->pdo->lastInsertId();
     }
 
     private function fixDates($fields) {

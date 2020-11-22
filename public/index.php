@@ -8,6 +8,8 @@
 
 include __DIR__ . "/../src/routes.php";
 
+$currentUser = 1;
+
 $controllerName = $_GET['controller'] ?? 'home';
 $action = $_GET['action'] ?? 'index';
 
@@ -28,7 +30,7 @@ if ($route == strtolower($route)) {
 
 $title = $page['title'];
 $body = $page['body'];
-
+$currentUser = $page['currentUser'] ?? $currentUser;
 
 if (array_key_exists('content_type', $page)) {
     switch ($page['content_type']) {

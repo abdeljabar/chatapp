@@ -52,11 +52,20 @@ class MessageController
         $message = $_POST['message'];
         $message['created_at'] = new \DateTime();
 
-        $this->messageTable->save($message);
+        $id = $this->messageTable->save($message);
 
         return [
             'title' => 'Welcome To ChatApp',
-            'body' => json_encode(['success' => 1, 'message_text' => $message['body']]),
+            'body' => json_encode([
+                'success' => 1,
+                'message' => [
+                    'id' => $id,
+                    'body' => $message['body'],
+                    'from_user_id' => $message['from_user_id'],
+                    'to_user_id' => $message['to_user_id'],
+                    'created_at' => $message['created_at']->format('Y-m-d H:i'),
+                ],
+            ]),
             'content_type' => 'application/json',
         ];
     }

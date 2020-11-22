@@ -11,24 +11,23 @@
 </head>
 <body>
 
-<nav></nav>
-<main>
-    <?=$body?>
-</main>
-<footer class="text-center">
-    &copy; ChatApp <?=date('Y')?>
-</footer>
+<main><?=$body?></main>
+<footer class="text-center">&copy; ChatApp <?=date('Y')?></footer>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
-    const $container = $('#message_list');
+    const $messageContainer = $('#message_list');
     const $contactContainer = $('#contact_list');
+    const currentUser = parseInt("<?=$currentUser?>");
+    let chosenUser = 0;
 
     $('#message_send').submit(function (e) {
         e.preventDefault();
+
+        console.log('chosenUser', chosenUser);
 
         let messageBody = $(this).find('#message_body');
         let messageBodyValue = messageBody.val();
@@ -40,15 +39,26 @@
             data: {
                 message: {
                     body: messageBodyValue,
-                    from_user_id: 1,
-                    to_user_id: 2,
+                    from_user_id: currentUser,
+                    to_user_id: chosenUser,
                 },
             }
         }).then(function (response) {
-            if (response.data.success) {
-                console.log('success');
-                messageBody.clear('');
-            }
+            console.log('success');
+
+            let messageNew = $messageContainer.attr('data-prototype')
+                .replace(/__id__/g, response.data.message.id)
+                .replace(/__body__/g, response.data.message.body)
+                .replace(/__from_user_id__/g, response.data.message.from_user_id)
+                .replace(/__to_user_id__/g, response.data.message.to_user_id)
+                .replace(/__time__/g, response.data.message.created_at)
+            ;
+
+            console.log('messageNew', messageNew);
+
+            $messageContainer.append( messageNew );
+
+            messageBody.val('');
 
         }).catch(function (error) {
             console.log('error', error.response);
@@ -58,16 +68,15 @@
     $('body').on('click', '.contact_choose', function (e) {
 
         $('#message_list_wrapper').show();
-        let other = $(this).attr('data-id');
-
+        chosenUser = $(this).attr('data-id');
         var messageContent = '';
 
         axios
             .get('/api/messages', {
                 params: {
                     users: {
-                        current: 1,
-                        other: other,
+                        current: currentUser,
+                        other: chosenUser,
                     }
                 }
             })
@@ -75,8 +84,7 @@
                 let messages = response.data.messages;
 
                 for (let i = 0; i < messages.length; i++) {
-                    //console.log(messages[i].id);
-                    messageContent += $container.attr('data-prototype')
+                    messageContent += $messageContainer.attr('data-prototype')
                         .replace(/__id__/g, messages[i].id)
                         .replace(/__body__/g, messages[i].body)
                         .replace(/__from_user_id__/g, messages[i].from_user_id)
@@ -85,9 +93,7 @@
                     ;
                 }
 
-                //console.log(messageContent);
-
-                $container.html(messageContent);
+                $messageContainer.html(messageContent);
 
             });
     });
@@ -96,6 +102,9 @@
         var contactContent = '';
         axios
             .get('/api/contacts', {
+                params : {
+                    currentUser: currentUser
+                }
             })
             .then( function (response) {
                 let contacts = response.data.contacts;
@@ -108,8 +117,6 @@
                         .replace(/__status__/g, contacts[i].status)
                     ;
                 }
-
-                console.log(contactContent);
 
                 $contactContainer.html(contactContent);
 
