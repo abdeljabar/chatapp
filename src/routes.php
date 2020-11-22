@@ -15,13 +15,6 @@ $routes['/'] = [
     'file_path' => '/../src/Controller/HomeController.php',
 ];
 
-$routes['/register'] = [
-    'action' => 'register',
-    'controllerName' => 'security',
-    'class_path' => '\App\Controller\SecurityController',
-    'file_path' => '/../src/Controller/SecurityController.php',
-];
-
 $routes['/login'] = [
     'action' => 'login',
     'controllerName' => 'security',

@@ -31,8 +31,7 @@ class ContactController
 
             $printedContacts[] = [
                 'id' => $contact['id'],
-                'first_name' => $contact['first_name'],
-                'last_name' => $contact['last_name'],
+                'pseudo' => $contact['pseudo'],
                 'last_signed_at' => $contact['last_signed_at'],
                 'created_at' => $contact['created_at'],
                 'updated_at' => $contact['updated_at'],

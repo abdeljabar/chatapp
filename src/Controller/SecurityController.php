@@ -8,20 +8,38 @@
 
 namespace App\Controller;
 
+require_once __DIR__ . '/../../TheFramework/PDO/DbTable.php';
 
 class SecurityController
 {
-    public function login() {
-        return [
-            'title' => 'ChatApp Login',
-            'body' => 'Welcome To ChatApp where you\'ll meet cool people like you.',
-        ];
+    public function __construct()
+    {
+        $this->userTable = new \TheFramework\PDO\DbTable( 'user', 'id');
     }
 
-    public function register() {
+    public function login() {
+
+        if (isset($_POST, $_POST['user']) && isset($_POST['user']['pseudo'])) {
+            $user = $_POST['user'];
+            $user['last_signed_at'] = new \DateTime();
+            $user['created_at'] = new \DateTime();
+
+            $id = $this->userTable->save($user);
+            $_SESSION['id'] = $id;
+
+            header('location: /');
+        }
+
+        ob_start();
+        include __DIR__ . '/../../templates/login.php';
+        $body = ob_get_clean();
+
+        $currentUser = 1;
+
         return [
-            'title' => 'ChatApp Signup',
-            'body' => 'Welcome To ChatApp where you\'ll meet cool people like you.',
+            'title' => 'Welcome To ChatApp',
+            'body' => $body,
+            'currentUser' => $currentUser,
         ];
     }
 }

@@ -113,7 +113,7 @@
                     console.log(contacts[i].id);
                     contactContent += $contactContainer.attr('data-prototype')
                         .replace(/__id__/g, contacts[i].id)
-                        .replace(/__name__/g, contacts[i].first_name + contacts[i].last_name)
+                        .replace(/__name__/g, contacts[i].pseudo)
                         .replace(/__status__/g, contacts[i].status)
                     ;
                 }

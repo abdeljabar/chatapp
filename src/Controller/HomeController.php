@@ -8,7 +8,6 @@
 
 namespace App\Controller;
 
-
 class HomeController
 {
     public function index() {
@@ -16,7 +15,7 @@ class HomeController
         include  __DIR__ . '/../../templates/index.php';
         $body = ob_get_clean();
 
-        $currentUser = 1;
+        $currentUser = $_SESSION['id'];
 
         return [
             'title' => 'Welcome To ChatApp',

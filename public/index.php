@@ -6,9 +6,11 @@
  * Time: 1:56 PM
  */
 
+session_start();
+
 include __DIR__ . "/../src/routes.php";
 
-$currentUser = 1;
+$currentUser = $_SESSION['id'];
 
 $controllerName = $_GET['controller'] ?? 'home';
 $action = $_GET['action'] ?? 'index';
