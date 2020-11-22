@@ -21,13 +21,23 @@ class SecurityController
 
         if (isset($_POST, $_POST['user']) && isset($_POST['user']['pseudo'])) {
             $user = $_POST['user'];
+
+            $currentUserData = $this->userTable->findOneBy(['pseudo' => $user['pseudo']]);
+
+            if ($currentUserData) {
+                $user = $currentUserData;
+                $_SESSION['id'] = $currentUserData['id'];
+            } else {
+                $user['created_at'] = new \DateTime();
+            }
+
             $user['last_signed_at'] = new \DateTime();
-            $user['created_at'] = new \DateTime();
 
             $id = $this->userTable->save($user);
-            $_SESSION['id'] = $id;
+            $_SESSION['id'] = $currentUserData ? $currentUserData['id']:$id;
 
             header('location: /');
+            exit;
         }
 
         ob_start();

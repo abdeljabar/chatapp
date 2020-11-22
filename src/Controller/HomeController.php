@@ -15,16 +15,15 @@ class HomeController
         include  __DIR__ . '/../../templates/index.php';
         $body = ob_get_clean();
 
-        $currentUser = $_SESSION['id'] ?? null;
-
-        if (null === $currentUser) {
+        if (!isset($_SESSION) || !isset($_SESSION['id'])) {
             header('location: /login');
+            exit;
         }
 
         return [
             'title' => 'Welcome To ChatApp',
             'body' => $body,
-            'currentUser' => $currentUser,
+            'currentUser' => $_SESSION['id'],
         ];
     }
 }

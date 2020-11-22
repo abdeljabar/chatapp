@@ -48,10 +48,25 @@ class DbTable
 
         $query = rtrim($query, 'AND ');
 
-        var_dump($params);
-
         $result = $this->query($query, $params);
         return $result->fetchAll();
+    }
+
+    public function findOneBy($fields=[]) {
+
+        $query = 'SELECT * FROM `' . $this->table . '` WHERE ';
+
+        $params = [];
+
+        foreach ($fields as $k => $v) {
+            $query .= ' `' . $k . '` = :' . $k . ' AND ';
+            $params[$k] = $v;
+        }
+
+        $query = rtrim($query, 'AND ') . ' LIMIT 1';
+
+        $result = $this->query($query, $params);
+        return $result->fetch();
     }
 
     public function findByContactAndUser($contact, $current) {
