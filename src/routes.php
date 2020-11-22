@@ -63,3 +63,10 @@ $routes['/api/messages/send'] = [
     'class_path' => '\App\Controller\Api\MessageController',
     'file_path' => '/../src/Controller/Api/MessageController.php',
 ];
+
+$routes['/api/messages/checknew'] = [
+    'action' => 'checknew',
+    'controllerName' => 'message',
+    'class_path' => '\App\Controller\Api\MessageController',
+    'file_path' => '/../src/Controller/Api/MessageController.php',
+];

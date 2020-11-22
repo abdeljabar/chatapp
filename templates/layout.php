@@ -23,6 +23,7 @@
     const $contactContainer = $('#contact_list');
     const currentUser = parseInt("<?=$currentUser?>");
     let chosenUser = 0;
+    let $chosenUserContainer;
 
     $('#message_send').submit(function (e) {
         e.preventDefault();
@@ -68,7 +69,8 @@
     $('body').on('click', '.contact_choose', function (e) {
 
         $('#message_list_wrapper').show();
-        chosenUser = $(this).attr('data-id');
+        $chosenUserContainer = $(this);
+        chosenUser = $chosenUserContainer.attr('data-id');
         var messageContent = '';
 
         axios
@@ -121,7 +123,31 @@
                 $contactContainer.html(contactContent);
 
             });
+
+        // watch for new messages on the same room
+        setInterval(function(){
+            if (chosenUser) {
+                // check if there are new messages from interlocutor
+                axios
+                    .get('/api/messages/checknew', {
+                        params: {
+                            users: {
+                                current: currentUser,
+                                other: chosenUser,
+                            }
+                        }
+                    }).then( function (response) {
+                        let messages = response.data.messages;
+
+                    if (messages.length > 0) {
+                        console.log('messages', messages);
+                        $chosenUserContainer.trigger('click')
+                    }
+                });
+            }
+        }, 3000);
     });
+
 </script>
 </body>
 </html>

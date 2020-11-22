@@ -26,15 +26,53 @@ class MessageController
         try {
             $messages = $this->messageTable->findByContactAndUser($messageUsers['other'], $messageUsers['current']);
             foreach ($messages as $k => $message) {
-                $printedMessages[] = [
+                $messageUpdated = [
                     'id' => $message['id'],
                     'body' => $message['body'],
                     'from_user_id' => $message['from_user_id'],
                     'to_user_id' => $message['to_user_id'],
                     'created_at' => $message['created_at'],
-                    'edited_at' => $message['edited_at'],
+                    'edited_at' => $message['edited_at']
                 ];
+
+                $printedMessages[] = $messageUpdated;
+
+                if (!isset($messageUpdated['read_at'])) {
+                    $messageUpdated['read_at'] = new \DateTime();
+                    $this->messageTable->save($messageUpdated);
+                }
             }
+
+        } catch (\PDOException $exception) {
+            die($exception->getMessage());
+        }
+
+        return [
+            'title' => 'Welcome To ChatApp',
+            'body' => json_encode(['messages' => $printedMessages]),
+            'content_type' => 'application/json',
+        ];
+    }
+
+    public function checknew() {
+        $messageUsers = json_decode($_GET['users'], true);
+        $printedMessages = [];
+
+        try {
+            $messages = $this->messageTable->findNewByContactAndUser($messageUsers['other'], $messageUsers['current']);
+            foreach ($messages as $k => $message) {
+                $messageUpdated = [
+                    'id' => $message['id'],
+                    'body' => $message['body'],
+                    'from_user_id' => $message['from_user_id'],
+                    'to_user_id' => $message['to_user_id'],
+                    'created_at' => $message['created_at'],
+                    'edited_at' => $message['edited_at']
+                ];
+
+                $printedMessages[] = $messageUpdated;
+            }
+
         } catch (\PDOException $exception) {
             die($exception->getMessage());
         }

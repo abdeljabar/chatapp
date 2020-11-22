@@ -10,7 +10,7 @@ session_start();
 
 include __DIR__ . "/../src/routes.php";
 
-$currentUser = $_SESSION['id'];
+$currentUser = $_SESSION['id'] ?? null;
 
 $controllerName = $_GET['controller'] ?? 'home';
 $action = $_GET['action'] ?? 'index';

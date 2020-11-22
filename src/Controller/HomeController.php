@@ -15,7 +15,7 @@ class HomeController
         include  __DIR__ . '/../../templates/index.php';
         $body = ob_get_clean();
 
-        $currentUser = $_SESSION['id'];
+        $currentUser = $_SESSION['id'] ?? null;
 
         return [
             'title' => 'Welcome To ChatApp',

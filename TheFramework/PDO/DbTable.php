@@ -55,8 +55,7 @@ class DbTable
     }
 
     public function findByContactAndUser($contact, $current) {
-
-        $query = 'SELECT * FROM message WHERE (from_user_id = :contact and to_user_id = :currentUser) OR (from_user_id = :currentUser and to_user_id = :contact)';
+        $query = 'SELECT * FROM message WHERE (from_user_id = :contact and to_user_id = :currentUser) OR (from_user_id = :currentUser and to_user_id = :contact) ORDER BY created_at ASC';
 
         $params['contact'] = $contact;
         $params['currentUser'] = $current;
@@ -90,14 +89,10 @@ class DbTable
     }
 
     public function save($record) {
-        try {
-            if (!array_key_exists($this->primaryKey, $record) || $record[$this->primaryKey] == '') {
-                $record[$this->primaryKey] = null;
-            }
-
+        if (!isset($record[$this->primaryKey])) {
+            $record[$this->primaryKey] = null;
             $id = $this->insert($record);
-
-        } catch (\PDOException $exception) {
+        } else {
             $id = $this->update($record);
         }
 
@@ -138,17 +133,17 @@ class DbTable
     private function update($fields) {
         $query = 'UPDATE  `' . $this->table . '` SET ';
 
+        $fields = $this->fixDates($fields);
+
         foreach ($fields as $k => $v) {
-            $query .= '`' . $k . '` = ' . $v . ',';
+            $query .= '`' . $k . '` = :' . $k . ',';
         }
 
         $query = rtrim($query, ',');
 
         $query .= ' WHERE `' . $this->primaryKey . '` = :primaryKey';
 
-        $fields['primaryKey'] = $fields['id'];
-
-        $fields = $this->fixDates($fields);
+        $fields['primaryKey'] = $fields[$this->primaryKey];
 
         $this->query($query, $fields);
 
@@ -158,11 +153,22 @@ class DbTable
     private function fixDates($fields) {
         foreach ($fields as $k => $v) {
             if ($v instanceof  \DateTime) {
-                $fields[$k] = $v->format('Y-m-d H:i');
+                $fields[$k] = $v->format('Y-m-d H:i:s');
             }
         }
 
         return $fields;
+    }
+
+    public function findNewByContactAndUser($other, $current)
+    {
+        $query = 'SELECT * FROM message WHERE read_at is null AND to_user_id = :currentUser and from_user_id = :contact ORDER BY created_at ASC';
+
+        $params['contact'] = $other;
+        $params['currentUser'] = $current;
+
+        $result = $this->query($query, $params);
+        return $result->fetchAll();
     }
 
 }

@@ -30,15 +30,4 @@ class MessageController
             'body' => $body,
         ];
     }
-
-    public function list() {
-        ob_start();
-        include  __DIR__ . '/../../templates/message_listing.php';
-        $body = ob_get_clean();
-
-        return [
-            'title' => 'Your Messages',
-            'body' => $body,
-        ];
-    }
 }
