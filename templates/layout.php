@@ -3,6 +3,11 @@
 <head>
     <title><?=$title?></title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        #message_list_wrapper {
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
@@ -50,12 +55,21 @@
         });
     });
 
-    $(document).ready(function () {
+    $('body').on('click', '.contact_choose', function (e) {
+
+        $('#message_list_wrapper').show();
+        let other = $(this).attr('data-id');
+
         var messageContent = '';
-        var contactContent = '';
 
         axios
             .get('/api/messages', {
+                params: {
+                    users: {
+                        current: 1,
+                        other: other,
+                    }
+                }
             })
             .then( function (response) {
                 let messages = response.data.messages;
@@ -76,7 +90,10 @@
                 $container.html(messageContent);
 
             });
+    });
 
+    $().ready(function () {
+        var contactContent = '';
         axios
             .get('/api/contacts', {
             })

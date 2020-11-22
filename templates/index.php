@@ -17,7 +17,7 @@
                 <h3>Contacts</h3>
                 <div id="contact_list" data-prototype="<?php ob_start(); include '_partials/contact_item.php'; echo htmlentities(ob_get_clean()); ?>"></div>
             </div>
-            <div class="col-sm-9">
+            <div class="col-sm-9" id="message_list_wrapper">
                 <h3>Messages</h3>
                 <div id="message_list" data-prototype="<?php ob_start(); include '_partials/message_item.php'; echo htmlentities(ob_get_clean()); ?>"></div>
                 <form action="?" method="post" id="message_send" class="mt-3">

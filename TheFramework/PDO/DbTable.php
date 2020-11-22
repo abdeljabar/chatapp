@@ -35,6 +35,36 @@ class DbTable
         return $result->fetchAll();
     }
 
+    public function findBy($fields=[]) {
+
+        $query = 'SELECT * FROM `' . $this->table . '` WHERE ';
+
+        $params = [];
+
+        foreach ($fields as $k => $v) {
+            $query .= ' `' . $k . '` = :' . $k . ' AND ';
+            $params[$k] = $v;
+        }
+
+        $query = rtrim($query, 'AND ');
+
+        var_dump($params);
+
+        $result = $this->query($query, $params);
+        return $result->fetchAll();
+    }
+
+    public function findByContactAndUser($contact, $current) {
+
+        $query = 'SELECT * FROM message WHERE (from_user_id = :contact and to_user_id = :currentUser) OR (from_user_id = :currentUser and to_user_id = :contact)';
+
+        $params['contact'] = $contact;
+        $params['currentUser'] = $current;
+
+        $result = $this->query($query, $params);
+        return $result->fetchAll();
+    }
+
     public function findById($value) {
         $query = 'SELECT * FROM `' . $this->table . '` WHERE ' . $this->primaryKey . '` = :value';
         $params = [

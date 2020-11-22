@@ -20,19 +20,23 @@ class MessageController
     }
 
     public function list() {
-        $messages = $this->messageTable->findAll();
-
+        $messageUsers = json_decode($_GET['users'], true);
         $printedMessages = [];
 
-        foreach ($messages as $k => $message) {
-            $printedMessages[] = [
-                'id' => $message['id'],
-                'body' => $message['body'],
-                'from_user_id' => $message['from_user_id'],
-                'to_user_id' => $message['to_user_id'],
-                'created_at' => $message['created_at'],
-                'edited_at' => $message['edited_at'],
-            ];
+        try {
+            $messages = $this->messageTable->findByContactAndUser($messageUsers['other'], $messageUsers['current']);
+            foreach ($messages as $k => $message) {
+                $printedMessages[] = [
+                    'id' => $message['id'],
+                    'body' => $message['body'],
+                    'from_user_id' => $message['from_user_id'],
+                    'to_user_id' => $message['to_user_id'],
+                    'created_at' => $message['created_at'],
+                    'edited_at' => $message['edited_at'],
+                ];
+            }
+        } catch (\PDOException $exception) {
+            die($exception->getMessage());
         }
 
         return [
